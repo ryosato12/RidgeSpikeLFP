@@ -1,0 +1,43 @@
+function Beta = lassoFISTA(XX,YX,lambda,maxIter,optTol) 
+% LASSOFISTA Complex lasso solved using the fast iterative soft 
+% thresholding algorithm. 
+
+if ~exist("maxIter","var")
+    maxIter = 1e5; 
+end 
+
+if ~exist("optTol","var")
+    optTol = 1e-6; 
+end 
+
+% Lipschitz constant 
+t = 1/max(eig(XX)); 
+
+Beta = zeros(size(YX,2),size(YX,1)); 
+
+Beta_old = Beta;
+tau_old = 1; 
+A = Beta;
+
+for i = 1:maxIter
+
+    % Proximal gradient step
+    Beta = eta(A-t*(XX*A-YX.'),t*lambda);
+
+    % Check for convergence
+    Err = Beta-Beta_old;
+    error = trace(Err'*Err); 
+    if error < optTol 
+        fprintf("Converged at iter. %d with err.: %e\n",i,error)
+        break; 
+    end
+
+    % Momentum
+    tau = .5*(1+sqrt(1+4*tau_old^2));
+    A = Beta+((tau_old-1)/tau)*(Beta-Beta_old);
+
+    Beta_old = Beta;
+    tau_old = tau;
+end 
+
+end 
