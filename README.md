@@ -1,1 +1,1 @@
-Spike LFP analysis
+This repository contains files for analyzing spike-LFP relationships. Calling regressConvolve.m with a choice of penalty (l1 or l2-regularization) and a grid of lambda values will return model fits predicted on a testing set specified by lapID. Currently, the code supports 1D positions only (linear track). 
